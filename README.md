@@ -6,6 +6,18 @@
 
 This implementation is up to 4 times faster than [openai/whisper](https://github.com/openai/whisper) for the same accuracy while using less memory. The efficiency can be further improved with 8-bit quantization on both CPU and GPU.
 
+## Features
+
+- **Fast Transcription**: Up to 4x faster than OpenAI's Whisper with the same accuracy
+- **Memory Efficient**: Uses less memory with optional 8-bit quantization
+- **GPU Support**: CUDA acceleration for faster processing
+- **Web Interface**: Modern Gradio UI for easy transcription
+- **REST API**: Full-featured API for integration with other applications
+- **Multiple Formats**: Support for WAV, MP3, FLAC, M4A, OGG, WEBM
+- **Word Timestamps**: Optional word-level timestamp generation
+- **VAD Filtering**: Voice Activity Detection to skip silent parts
+- **Language Detection**: Automatic language detection or manual specification
+
 ## Benchmark
 
 ### Whisper
@@ -231,6 +243,113 @@ logging.getLogger("faster_whisper").setLevel(logging.DEBUG)
 ### Going further
 
 See more model and transcription options in the [`WhisperModel`](https://github.com/SYSTRAN/faster-whisper/blob/master/faster_whisper/transcribe.py) class implementation.
+
+## Web Interface and API
+
+This repository includes a modern Gradio web interface and a REST API for easy transcription without coding.
+
+### Quick Start
+
+#### Option 1: Start Both Services Together
+```bash
+cd gradio_app
+python app.py --api
+```
+
+This will start:
+- **Gradio UI** on `http://localhost:8001` - Modern web interface for transcription
+- **API Server** on `http://localhost:8002` - REST API for programmatic access
+
+#### Option 2: Start Services Separately
+
+**Gradio UI only:**
+```bash
+cd gradio_app
+python app.py
+```
+
+**API Server only:**
+```bash
+cd gradio_app
+python api_server.py
+```
+
+### Gradio Web Interface
+
+The Gradio interface provides a user-friendly way to transcribe audio files:
+
+- **File Upload**: Drag and drop or select audio files
+- **Model Selection**: Choose from tiny, base, small, medium, or large-v3 models
+- **Language Options**: Auto-detect or specify language
+- **Advanced Settings**: Configure beam size, word timestamps, and VAD filtering
+- **Download Results**: Save transcriptions as text files
+- **Real-time Processing**: See transcription progress
+
+### REST API
+
+The API provides programmatic access to transcription capabilities:
+
+#### Endpoints
+
+- `GET /health` - Check server status and model loading
+- `POST /transcribe` - Main transcription endpoint
+- `GET /models` - List available model sizes
+- `GET /languages` - List supported languages
+
+#### Usage Examples
+
+**File Upload:**
+```bash
+curl -X POST http://localhost:8002/transcribe \
+  -F "audio=@your_audio_file.mp3" \
+  -F "model_size=base" \
+  -F "language=auto"
+```
+
+**Base64 JSON:**
+```bash
+curl -X POST http://localhost:8002/transcribe \
+  -H "Content-Type: application/json" \
+  -d '{
+    "audio_data": "base64_encoded_audio_data",
+    "filename": "audio.mp3",
+    "model_size": "base",
+    "language": "auto"
+  }'
+```
+
+For complete API documentation, see [API_DOCUMENTATION.md](gradio_app/API_DOCUMENTATION.md).
+
+### Installation for Web Interface
+
+Install the required dependencies:
+
+```bash
+cd gradio_app
+pip install -r requirements.txt
+```
+
+The web interface requires:
+- `torch>=2.0.0`
+- `faster-whisper>=1.0.0`
+- `gradio>=4.0.0`
+- `flask>=2.3.0`
+- `numpy>=1.24.0`
+
+### Docker Support
+
+The API server can be run in Docker:
+
+```bash
+# Build the image
+docker build -t whisper-api gradio_app/
+
+# Run the API server
+docker run -p 8002:8002 whisper-api
+
+# Run with GPU support (if available)
+docker run --gpus all -p 8002:8002 whisper-api
+```
 
 ## Community integrations
 
