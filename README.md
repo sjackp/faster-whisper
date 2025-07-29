@@ -6,6 +6,29 @@
 
 This implementation is up to 4 times faster than [openai/whisper](https://github.com/openai/whisper) for the same accuracy while using less memory. The efficiency can be further improved with 8-bit quantization on both CPU and GPU.
 
+**Note:** This is a fork of [SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper) with a modern Gradio web UI and REST API for easy audio transcription.
+
+# Faster Whisper with Web UI & API
+
+This project extends the original faster-whisper with:
+- A modern Gradio web interface for easy transcription
+- A REST API for programmatic access
+- Docker support for simple deployment
+
+## Quick Start
+
+### Start Both Web UI and API
+```bash
+cd gradio_app
+python app.py --api
+```
+- Gradio UI: [http://localhost:8001](http://localhost:8001)
+- API: [http://localhost:8002](http://localhost:8002)
+
+### API Documentation
+
+See [gradio_app/API_DOCUMENTATION.md](gradio_app/API_DOCUMENTATION.md) for full API usage and examples.
+
 ## Features
 
 - **Fast Transcription**: Up to 4x faster than OpenAI's Whisper with the same accuracy
